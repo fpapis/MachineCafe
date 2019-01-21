@@ -8,24 +8,62 @@ public class Boisson {
 	private int unit_sucre;
 	private int unit_chocolat;
 	
-	public Boisson(String nom, int prix, int uca, int ul, int us, int uch){
+	public Boisson(String nom, int prix, int unit_cafe, int unit_lait, int unit_sucre, int unit_chocolat) {
 		super();
 		this.nom = nom;
 		this.prix = prix;
-		this.unit_cafe = uca;
-		this.unit_lait = ul;
-		this.unit_sucre = us;
-		this.unit_chocolat = uch;
+		this.unit_cafe = unit_cafe;
+		this.unit_lait = unit_lait;
+		this.unit_sucre = unit_sucre;
+		this.unit_chocolat = unit_chocolat;
 	}
-	
-	
-	
-	public void modifierBoisson(){
-		
+
+	public String getNom() {
+		return nom;
 	}
-	
-	public void supprimerBoisson(){
-		
+
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+
+	public int getPrix() {
+		return prix;
+	}
+
+	public void setPrix(int prix) {
+		this.prix = prix;
+	}
+
+	public int getUnit_cafe() {
+		return unit_cafe;
+	}
+
+	public void setUnit_cafe(int unit_cafe) {
+		this.unit_cafe = unit_cafe;
+	}
+
+	public int getUnit_lait() {
+		return unit_lait;
+	}
+
+	public void setUnit_lait(int unit_lait) {
+		this.unit_lait = unit_lait;
+	}
+
+	public int getUnit_sucre() {
+		return unit_sucre;
+	}
+
+	public void setUnit_sucre(int unit_sucre) {
+		this.unit_sucre = unit_sucre;
+	}
+
+	public int getUnit_chocolat() {
+		return unit_chocolat;
+	}
+
+	public void setUnit_chocolat(int unit_chocolat) {
+		this.unit_chocolat = unit_chocolat;
 	}
 	
 	
