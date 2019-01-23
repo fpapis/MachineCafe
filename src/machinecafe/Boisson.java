@@ -9,7 +9,7 @@ public class Boisson {
 	private int unit_chocolat;
 	
 	public Boisson(String nom, int prix, int unit_cafe, int unit_lait, int unit_sucre, int unit_chocolat) {
-		super();
+		//super();
 		this.nom = nom;
 		this.prix = prix;
 		this.unit_cafe = unit_cafe;
@@ -66,7 +66,11 @@ public class Boisson {
 		this.unit_chocolat = unit_chocolat;
 	}
 	
-	
+	public void getInfos(){
+		System.out.println(this.nom + "\t\nPrix: " + this.prix + "\t\nQuantité de café: "+this.unit_cafe
+				+"\t \nQuantité de lait: "+this.unit_lait+"\t\nQuantité de sucre: "+this.unit_sucre
+				+"\t \nQuantité de chocolat: "+this.unit_chocolat);
+	}
 	
 	
 }

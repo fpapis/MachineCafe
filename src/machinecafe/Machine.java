@@ -1,17 +1,24 @@
 package machinecafe;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Machine {
 	
 	private Ingredient[] ingredient;
 	private Boisson[] boisson;
-	
 	Integer action;
 	Scanner sc = new Scanner(System.in);
 	
 	public Machine(){
+		this.ingredient = new Ingredient[4];
+		this.ingredient[0] = new Ingredient("Café", 0);
+		this.ingredient[1] = new Ingredient("Lait", 0);
+		this.ingredient[2] = new Ingredient("Chocolat", 0);
+		this.ingredient[3] = new Ingredient("Sucre", 0);
 		
+		this.boisson = new Boisson[3];
+		this.boisson[0] = new Boisson("Thé étrange", 5, 0, 2, 1, 0);
 	}
 	
 	public Ingredient[] getIngredient() {
@@ -29,20 +36,27 @@ public class Machine {
 	public void setBoisson(Boisson[] boisson) {
 		this.boisson = boisson;
 	}
-
+	/*
 	public static void main(String[] args) {
+		
 		Ingredient cafe = new Ingredient("Café", 0);
 		Ingredient lait = new Ingredient("Lait", 0);
 		Ingredient chocolat = new Ingredient("Chocolat", 0);
 		Ingredient sucre = new Ingredient("Sucre", 0);
 		
+		//Boisson a = new Boisson("cafe", 5, 2, 2, 2, 2);
+		//Boisson b = new Boisson("chocolat", 5, 2, 2, 2, 2);
+		//Boisson c = new Boisson("eau", 5, 2, 2, 2, 2); 
+		
 		Machine m = new Machine();
-		m.setIngredient(new Ingredient[] {cafe, lait, chocolat, sucre});
+		
+		
+		//m.setBoisson(new Boisson[] {a,b,c});
 		m.setBoisson(new Boisson[] {});
 		
 		m.demarrerMachine();
 		
-	}
+	}*/
 	
 	public void demarrerMachine(){
 		System.out.println("Bienvenue dans notre Machine à café");
@@ -63,7 +77,7 @@ public class Machine {
 			action = sc.nextInt();
 			switch(action)
 			{
-				case 1: this.ajouterBoisson();
+				case 1: this.acheterBoisson();
 					break;
 				case 2: this.ajouterBoisson();
 					break;
@@ -84,51 +98,85 @@ public class Machine {
 	
 	public void acheterBoisson(){
 		
-		listeBoisson();
+		do {
+			for (int i = 0; i < this.ingredient.length - 1; i++) {
+				if(this.boisson[i] != null){
+					System.out.println("==========");
+					this.boisson[i].getInfos();
+					System.out.println("==========");
+				}
+			}
+			
+			action = sc.nextInt();
+		} while (action < 0 || action > this.ingredient.length - 1);
 		
 		retourMenu();
 	}
 	
 	public void ajouterBoisson(){
 		
-		if (boisson.length > 2) 
+		System.out.println("Veuillez saisir le nom de votre boisson");
+		sc.nextLine();
+		String nom_boisson = sc.nextLine();
+		System.out.println("Veuillez saisir le prix de votre boisson");
+		int prix = sc.nextInt();
+		System.out.println("Veuillez saisir la quantité de café dans votre boisson");
+		int unit_cafe = sc.nextInt();
+		System.out.println("Veuillez saisir la quantité de lait dans votre boisson");
+		int unit_lait = sc.nextInt();
+		System.out.println("Veuillez saisir la quantité de sucre dans votre boisson");
+		int unit_sucre = sc.nextInt();
+		System.out.println("Veuillez saisir la quantité de chocolat dans votre boisson");
+		int unit_chocolat = sc.nextInt();
+		
+		Boisson boisson = new Boisson(nom_boisson, prix, unit_cafe, unit_lait, unit_sucre, unit_chocolat);
+		for (int i = 0; i < this.ingredient.length; i++) 
 		{
-			System.out.println("La machine contient deja trois boissons, vous ne pouvez plus en ajouter");
-		} 
-		else 
-		{
-			
-			System.out.println("Veuillez saisir le nom de votre boisson\n");
-			String nom_boisson = sc.nextLine();
-			sc.nextLine();
-			System.out.println("Veuillez saisir le prix de votre boisson\n");
-			int prix = sc.nextInt();
-			System.out.println("Veuillez saisir la quantité de café dans votre boisson\n");
-			int unit_cafe = sc.nextInt();
-			System.out.println("Veuillez saisir la quantité de lait dans votre boisson\n");
-			int unit_lait = sc.nextInt();
-			System.out.println("Veuillez saisir la quantité de sucre dans votre boisson\n");
-			int unit_sucre = sc.nextInt();
-			System.out.println("Veuillez saisir la quantité de chocolat dans votre boisson\n");
-			int unit_chocolat = sc.nextInt();
-
-			Boisson b = new Boisson(nom_boisson, prix, unit_cafe, unit_lait, unit_sucre, unit_chocolat);
-
-			
+			if(this.boisson[i] == null)
+			{
+				this.boisson[i] = boisson;
+				System.out.println("ajout ok");
+				return;
+			}
 		}
-	retourMenu();
+		
+		System.out.println("erreur ajout");
+			
+		retourMenu();
 	}
 	
 	public void modifierBoisson(){
-		System.out.println("Veuillez saisir le numéro de la boisson que vous souhaiter modifier");
+		
+		System.out.println("Veuillez saisir le numéro de la boisson que vous souhaitez modifier");
 		
 		do {
-			for (int i = 0; i <= boisson.length - 1; i++) {
-				System.out.println("\t" + i  + " : " + this.boisson[i].getNom());
+			for (int i = 0; i < this.ingredient.length - 1; i++) {
+				if(this.boisson[i] != null){
+					System.out.println("\t" + i + " : " + this.boisson[i].getNom());
+				}
 			}
 			
 			action = sc.nextInt();
-		} while (action < 0 || action > boisson.length - 1);
+		} while (action < 0 || action > this.ingredient.length - 1);
+		
+		System.out.println("Veuillez saisir le prix de votre boisson");
+		int prix = sc.nextInt();
+		System.out.println("Veuillez saisir la quantité de café dans votre boisson");
+		int unit_cafe = sc.nextInt();
+		System.out.println("Veuillez saisir la quantité de lait dans votre boisson");
+		int unit_lait = sc.nextInt();
+		System.out.println("Veuillez saisir la quantité de sucre dans votre boisson");
+		int unit_sucre = sc.nextInt();
+		System.out.println("Veuillez saisir la quantité de chocolat dans votre boisson");
+		int unit_chocolat = sc.nextInt();
+		
+		this.boisson[action].setPrix(prix);
+		this.boisson[action].setUnit_cafe(unit_cafe);
+		this.boisson[action].setUnit_lait(unit_lait);
+		this.boisson[action].setUnit_sucre(unit_sucre);
+		this.boisson[action].setUnit_chocolat(unit_chocolat);
+		
+		System.out.println("Boisson correctement modifiée");
 		
 		retourMenu();
 	}
@@ -136,7 +184,17 @@ public class Machine {
 	public void supprimerBoisson(){
 		System.out.println("Veuillez saisir le numéro de la boisson que vous souhaiter supprimer");
 		
-		listeBoisson();
+		do {
+			for (int i = 0; i < this.ingredient.length - 1; i++) {
+				if(this.boisson[i] != null){
+					System.out.println("\t" + i + " : " + this.boisson[i].getNom());
+				}
+			}
+			
+			action = sc.nextInt();
+		} while (action < 0 || action > this.ingredient.length - 1);
+		
+		this.boisson[action] = null;
 		
 		retourMenu();
 	}
@@ -167,7 +225,7 @@ public class Machine {
 		for (int i = 0; i <= ingredient.length - 1; i++) {
 			System.out.println("\t" + this.ingredient[i].getNom() + " - Quantité : " + this.ingredient[i].getUnit());
 		}
-		retourMenu();
+		return;
 	}
 	
 	public void sortieMachine(){
@@ -179,13 +237,17 @@ public class Machine {
 	}
 	
 	public void listeBoisson(){
+		int i;
+		
 		do {
-			for (int i = 0; i <= boisson.length - 1; i++) {
-				System.out.println("\t" + i  + " : " + this.boisson[i].getNom());
+			for (i = 0; i < this.ingredient.length - 1; i++) {
+				if(this.boisson[i] != null){
+					System.out.println("\t" + i + " : " + this.boisson[i].getNom());
+				}
 			}
 			
 			action = sc.nextInt();
-		} while (action < 0 || action > boisson.length - 1);
+		} while (action < 0 || action > this.ingredient.length - 1);
 	}
 
 }
