@@ -80,13 +80,25 @@ public class Machine {
 	}
 	
 	public void acheterBoisson(){
-		int monnaie;
+		double monnaie = 0.00;
 		double rendu;
+		boolean qtedispo = true;
 		
 		listeBoisson("Veuillez saisir le numéro de la boisson que vous souhaitez acheter");
 		
 		System.out.println("Veuillez saisir votre monnaie");
-		monnaie = saisie();
+		
+		try {
+			monnaie = sc.nextDouble();
+		} catch (InputMismatchException e) {
+			System.out.println("Vous devez saisir une valeur numérique");
+			retourMenu();
+		}
+		
+		if (monnaie < 0){
+			System.out.println("Vous ne pouvez pas saisir de montant négatif");
+			retourMenu();
+		}
 		
 		if (monnaie < this.boisson[action].getPrix()) {
 			System.out.println("Vous n'avez pas assez de monnaie, vente refusée !");
@@ -95,47 +107,57 @@ public class Machine {
 		
 		if (this.ingredient[0].getUnit() < this.boisson[action].getUnit_cafe()) {
 			System.out.println("Il n'y a pas assez de " + this.ingredient[0].getNom() + " dans la machine");
-			retourMenu();
+			//retourMenu();
+			qtedispo = false;
 		}
 		
 		if (this.ingredient[1].getUnit() < this.boisson[action].getUnit_lait()) {
 			System.out.println("Il n'y a pas assez de " + this.ingredient[1].getNom() + " dans la machine");
-			retourMenu();
+			//retourMenu();
+			qtedispo = false;
 		}
 		
 		if (this.ingredient[2].getUnit() < this.boisson[action].getUnit_sucre()) {
 			System.out.println("Il n'y a pas assez de " + this.ingredient[2].getNom() + " dans la machine");
-			retourMenu();
+			//retourMenu();
+			qtedispo = false;
 		}
 		
 		if (this.ingredient[3].getUnit() < this.boisson[action].getUnit_chocolat()) {
 			System.out.println("Il n'y a pas assez de " + this.ingredient[3].getNom() + " dans la machine");
-			retourMenu();
+			//retourMenu();
+			qtedispo = false;
 		}
 		
-		this.ingredient[0].setUnit(this.ingredient[0].getUnit() - this.boisson[action].getUnit_cafe());
+		if(qtedispo){
+			this.ingredient[0].setUnit(this.ingredient[0].getUnit() - this.boisson[action].getUnit_cafe());
+			
+			this.ingredient[1].setUnit(this.ingredient[1].getUnit() - this.boisson[action].getUnit_lait());
+			
+			this.ingredient[2].setUnit(this.ingredient[2].getUnit() - this.boisson[action].getUnit_sucre());
+			
+			this.ingredient[3].setUnit(this.ingredient[3].getUnit() - this.boisson[action].getUnit_chocolat());
 		
-		this.ingredient[1].setUnit(this.ingredient[1].getUnit() - this.boisson[action].getUnit_lait());
-		
-		this.ingredient[2].setUnit(this.ingredient[2].getUnit() - this.boisson[action].getUnit_sucre());
-		
-		this.ingredient[3].setUnit(this.ingredient[3].getUnit() - this.boisson[action].getUnit_chocolat());
-		
-		rendu = monnaie - this.boisson[action].getPrix();
-		
-		if (rendu > 0) {
-			System.out.println("Pensez à récupérer votre monnaie : " + rendu);
+			System.out.println("Votre boisson est en cours de préparation, veuillez patienter ...");
+			
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			rendu = monnaie - this.boisson[action].getPrix();
+			
+			if (rendu > 0) {
+				System.out.println("Pensez à récupérer votre monnaie : " + rendu);
+			}
+			
+			System.out.println("Votre boisson est prête, merci de votre achat !");
 		}
-		
-		System.out.println("Votre boisson est en cours de préparation, veuillez patienter ...");
-		
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		else
+		{
+			System.out.println("Veuillez récupérer votre monnaie : " + monnaie);
 		}
-	
-		System.out.println("Votre boisson est prête, merci de votre achat !");
 		
 		retourMenu();
 	}
