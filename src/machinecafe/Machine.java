@@ -107,25 +107,21 @@ public class Machine {
 		
 		if (this.ingredient[0].getUnit() < this.boisson[action].getUnit_cafe()) {
 			System.out.println("Il n'y a pas assez de " + this.ingredient[0].getNom() + " dans la machine");
-			//retourMenu();
 			qtedispo = false;
 		}
 		
 		if (this.ingredient[1].getUnit() < this.boisson[action].getUnit_lait()) {
 			System.out.println("Il n'y a pas assez de " + this.ingredient[1].getNom() + " dans la machine");
-			//retourMenu();
 			qtedispo = false;
 		}
 		
 		if (this.ingredient[2].getUnit() < this.boisson[action].getUnit_sucre()) {
 			System.out.println("Il n'y a pas assez de " + this.ingredient[2].getNom() + " dans la machine");
-			//retourMenu();
 			qtedispo = false;
 		}
 		
 		if (this.ingredient[3].getUnit() < this.boisson[action].getUnit_chocolat()) {
 			System.out.println("Il n'y a pas assez de " + this.ingredient[3].getNom() + " dans la machine");
-			//retourMenu();
 			qtedispo = false;
 		}
 		
@@ -165,9 +161,9 @@ public class Machine {
 	public void ajouterBoisson(){
 		int[] infos;
 		
-		for (int i = 0; i < this.boisson.length; i++) 
+		for (int compteur = 0; compteur < this.boisson.length; compteur++) 
 		{
-			if(this.boisson[i] == null)
+			if(this.boisson[compteur] == null)
 			{
 				System.out.println("Veuillez saisir le nom de votre boisson");
 				sc.nextLine();
@@ -176,7 +172,7 @@ public class Machine {
 				
 				Boisson boisson = new Boisson(nom_boisson, infos[0], infos[1], infos[2], infos[3], infos[4]);
 				
-				this.boisson[i] = boisson;
+				this.boisson[compteur] = boisson;
 				System.out.println("Votre boisson a bien été ajoutée.");
 				return;
 			}
@@ -235,29 +231,29 @@ public class Machine {
 	
 	public void verifStockIngredients(){
 		System.out.print("Voici le stock actuel des ingrédients\n");
-		for (int i = 0; i <= ingredient.length - 1; i++) {
-			System.out.println("\t" + this.ingredient[i].getNom() + " - Quantité : " + this.ingredient[i].getUnit());
+		for (int compteur = 0; compteur <= ingredient.length - 1; compteur++) {
+			System.out.println("\t" + this.ingredient[compteur].getNom() + " - Quantité : " + this.ingredient[compteur].getUnit());
 		}
-		userAction();
+		retourMenu();
 	}
 	
 	public void consulterRecette() {
-		int i;
 
-		for (i = 0; i < this.boisson.length - 1; i++) 
+		for (int compteur = 0; compteur < this.boisson.length - 1; compteur++) 
 		{
-			if(this.boisson[i] != null)
+			if(this.boisson[compteur] != null)
 			{
-				this.boisson[i].getInfos();
+				this.boisson[compteur].getInfos();
 				nbBoisson++;
 			}
 		}
 		
-		userAction();
+		retourMenu();
 	}
 	
 	public void sortieMachine(){
 		System.out.println("Merci de votre visite, à bientot !");
+		System.exit(0);
 	}
 	
 	public void retourMenu(){
@@ -268,25 +264,25 @@ public class Machine {
 	}
 
 	public void listeBoisson(String txt){
-		int i;
+		
 		if(this.boisson[0] != null) 
 		{
 			System.out.println(txt);
 			do 
 			{
 				nbBoisson = -1;
-				for (i = 0; i < this.boisson.length - 1; i++) 
+				for (int compteur = 0; compteur < this.boisson.length - 1; compteur++) 
 				{
-					if(this.boisson[i] != null)
+					if(this.boisson[compteur] != null)
 					{
-						System.out.println("\t" + i + " : " + this.boisson[i].getNom());
+						System.out.println("\t" + compteur + " : " + this.boisson[compteur].getNom());
 						nbBoisson++;
 					}
 				}
 				
 				action = saisie();
 				
-			} while (action < 0 || action > nbBoisson); // this.boisson.length - 1);
+			} while (action < 0 || action > nbBoisson);
 		}
 		else 
 		{
@@ -296,14 +292,13 @@ public class Machine {
 	}
 	
 	public void listeIngredient(String txt) {
-		int i;
 		
 		if(this.ingredient[0] != null) {
 			System.out.println(txt);
 			do {
-				for (i = 0; i < this.ingredient.length; i++) {
-					if(this.ingredient[i] != null){
-						System.out.println("\t" + i + " : " + this.ingredient[i].getNom());
+				for (int compteur = 0; compteur < this.ingredient.length; compteur++) {
+					if(this.ingredient[compteur] != null){
+						System.out.println("\t" + compteur + " : " + this.ingredient[compteur].getNom());
 					}
 				}
 				
@@ -342,9 +337,16 @@ public class Machine {
 
 	public int[] editBoisson() {
 		int[] infos = new int[5];
+		int nbvide = 0;
 		
 		System.out.println("Veuillez saisir le prix de votre boisson");
 		infos[0] = saisie();
+		
+		if(infos[0] == 0) {
+			System.out.println("Vous ne pouvez pas fixer le prix à 0");
+			retourMenu();
+		}
+		
 		System.out.println("Veuillez saisir la quantité de café dans votre boisson");
 		infos[1] = saisie();
 		System.out.println("Veuillez saisir la quantité de lait dans votre boisson");
@@ -354,13 +356,18 @@ public class Machine {
 		System.out.println("Veuillez saisir la quantité de chocolat dans votre boisson");
 		infos[4] = saisie();
 		
+		for (int compteur = 0; compteur < infos.length; compteur++) {
+			if (infos[compteur] == 0) {
+				nbvide++;
+			}
+		}
+		
+		if(nbvide == infos.length - 1) {
+			System.out.println("Vous ne pouvez pas faire une boisson d'eau chaude !");
+			retourMenu();
+		}
+		
 		return infos;
-	}
-	
-	public void userAction() {
-		System.out.println("Appuyez sur une touche pour quitter cet écran");
-		sc.next();
-		retourMenu();
 	}
 	
 }
