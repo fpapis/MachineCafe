@@ -362,6 +362,11 @@ public class Machine {
 			}
 		}
 		
+		if(infos[1] == 0 && infos[2] == 0 && infos[4] == 0 && infos[3] != 0) {
+			System.out.println("Vous ne pouvez pas faire une boisson d'eau sucrée");
+			retourMenu();
+		}
+		
 		if(nbvide == infos.length - 1) {
 			System.out.println("Vous ne pouvez pas faire une boisson d'eau chaude !");
 			retourMenu();
