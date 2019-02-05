@@ -1,7 +1,13 @@
 package machinecafe;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+
 
 public class Machine {
 	
@@ -12,14 +18,23 @@ public class Machine {
 	Scanner sc = new Scanner(System.in);
 	
 	public Machine(){
-		this.ingredient = new Ingredient[4];
+		//# Le client souhaite un nouvel ingrédient : le thé
+		//this.ingredient = new Ingredient[4];
+		this.ingredient = new Ingredient[5];
 		this.ingredient[0] = new Ingredient("Café", 0);
 		this.ingredient[1] = new Ingredient("Lait", 0);
 		this.ingredient[2] = new Ingredient("Sucre", 0);
 		this.ingredient[3] = new Ingredient("Chocolat", 0);
 		
-		this.boisson = new Boisson[3];
-		this.boisson[0] = new Boisson("Thé étrange", 5, 0, 2, 1, 0);
+		this.ingredient[4] = new Ingredient("Thé", 0);
+		
+		//# Le client souhaite que la machine puisse contenir 5 boissons
+		//this.boisson = new Boisson[3];
+		this.boisson = new Boisson[5];
+		this.boisson[0] = new Boisson("Thé étrange", 5, 0, 2, 1, 0, 0);
+		this.boisson[1] = new Boisson("Thé étrange", 5, 0, 2, 1, 0, 0);
+		this.boisson[2] = new Boisson("Thé étrange", 5, 0, 2, 1, 0, 0);
+		this.boisson[3] = new Boisson("Thé étrange", 5, 0, 2, 1, 0, 0);
 	}
 	
 	public Ingredient[] getIngredient() {
@@ -40,6 +55,7 @@ public class Machine {
 	
 	public void demarrerMachine(){
 		System.out.println("Bienvenue dans notre Machine à café");
+		lectureFichier();
 		menu();
 	}
 	
@@ -139,7 +155,7 @@ public class Machine {
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				System.out.println("Oups, la machine a plantée ...");
 			}
 			
 			rendu = monnaie - this.boisson[action].getPrix();
@@ -170,7 +186,7 @@ public class Machine {
 				String nom_boisson = sc.nextLine();
 				infos = editBoisson();
 				
-				Boisson boisson = new Boisson(nom_boisson, infos[0], infos[1], infos[2], infos[3], infos[4]);
+				Boisson boisson = new Boisson(nom_boisson, infos[0], infos[1], infos[2], infos[3], infos[4], infos[5]);
 				
 				this.boisson[compteur] = boisson;
 				System.out.println("Votre boisson a bien été ajoutée.");
@@ -178,7 +194,7 @@ public class Machine {
 			}
 		}
 		
-		System.out.println("La machine contient deja 3 boissons, ajout impossible !");
+		System.out.println("La machine contient deja " + this.boisson.length + " boissons, ajout impossible !");
 		retourMenu();
 		
 	}
@@ -195,6 +211,7 @@ public class Machine {
 		this.boisson[action].setUnit_lait(infos[2]);
 		this.boisson[action].setUnit_sucre(infos[3]);
 		this.boisson[action].setUnit_chocolat(infos[4]);
+		this.boisson[action].setUnit_the(infos[5]);
 		
 		System.out.println("Votre boisson a été correctement modifiée.");
 		
@@ -253,6 +270,7 @@ public class Machine {
 	
 	public void sortieMachine(){
 		System.out.println("Merci de votre visite, à bientot !");
+		ecritureFichier();
 		System.exit(0);
 	}
 	
@@ -271,7 +289,7 @@ public class Machine {
 			do 
 			{
 				nbBoisson = -1;
-				for (int compteur = 0; compteur < this.boisson.length - 1; compteur++) 
+				for (int compteur = 0; compteur < this.boisson.length; compteur++) 
 				{
 					if(this.boisson[compteur] != null)
 					{
@@ -336,7 +354,7 @@ public class Machine {
 	}
 
 	public int[] editBoisson() {
-		int[] infos = new int[5];
+		int[] infos = new int[6];
 		int nbvide = 0;
 		
 		System.out.println("Veuillez saisir le prix de votre boisson");
@@ -355,6 +373,8 @@ public class Machine {
 		infos[3] = saisie();
 		System.out.println("Veuillez saisir la quantité de chocolat dans votre boisson");
 		infos[4] = saisie();
+		System.out.println("Veuillez saisir la quantité de thé dans votre boisson");
+		infos[5] = saisie();
 		
 		for (int compteur = 0; compteur < infos.length; compteur++) {
 			if (infos[compteur] == 0) {
@@ -373,6 +393,58 @@ public class Machine {
 		}
 		
 		return infos;
+	}
+	
+	public void lectureFichier(){
+		String chaine;
+		BufferedReader file = null;
+		String[] tab = null;
+		
+		try 
+		{
+			file = new BufferedReader(new FileReader("samples\\stock.csv"));
+			while((chaine = file.readLine()) != null) 
+			{
+				tab = chaine.split(";");
+			}
+			file.close();
+			
+			for (int compteur = 0; compteur < this.ingredient.length; compteur++) 
+			{
+				if(this.ingredient[compteur] != null)
+				{
+					int val = Integer.parseInt(tab[compteur].toString());
+					this.ingredient[compteur].setUnit(val);
+				}
+			}
+		} 
+		catch (IOException e) 
+		{
+			System.out.println("Le fichier de stock est introuvable !!!");
+		}
+		
+	}
+	
+	public void ecritureFichier(){
+		
+		String sfile = "samples\\stock.csv";
+        PrintWriter p;
+		try 
+		{
+			p = new PrintWriter(sfile);
+			for (int compteur = 0; compteur < this.ingredient.length; compteur++) 
+			{
+				if(this.ingredient[compteur] != null){
+					p.write(this.ingredient[compteur].getUnit() + ";");
+				}
+			}
+	        p.flush();
+	        p.close();
+		} 
+		catch (FileNotFoundException e) 
+		{
+			System.out.println("Le fichier de stock est introuvable !!!");
+		}
 	}
 	
 }

@@ -2,7 +2,7 @@ package machinecafe;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args){
 		
 		Machine m = new Machine();
 		
